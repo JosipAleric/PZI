@@ -7,6 +7,47 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous">
 </head>
 <body>
+
+    <?php
+        $host = "localhost";
+        $username = "root";
+        $password = "";
+        $dbname = "pzi";
+
+        // Cretate connection
+        $db = new mysqli($host, $username, $password, $dbname);
+
+        // Check connection
+        if ($db->connect_error) {
+            die("Connection failed: " . $db->connect_error);
+        }
+        echo "Connected successfully \n";
+
+        $query = "SELECT first_name, last_name FROM users";
+        $result = $db->query($query);
+        $row = $result->fetch_assoc();
+        var_dump($row);
+
+        /*Dohvacamo drugi red u tablici
+        $row = $result->fetch_assoc();
+        var_dump($row);*/
+
+        //Unos korisnika u bazu ako je poslan POST request
+        if($_SERVER['REQUEST_METHOD'] === "POST"){
+            $first_name = $_POST['first_name'];
+            $last_name = $_POST['last_name'];
+            $password = $_POST['password'];
+
+            echo "Usao u funkciju za kreiranje usera";
+        };
+
+        $query = "INSERT INTO users(first_name, last_name, password)";
+        $query .= "VALUES ('$first_name', '$last_name', '$password')";
+        $result = $db->query($query);
+        
+        
+    ?>
+
     <?php
         $test = "<h1>Testna varijabla</h1>";
         $test2 = '';
@@ -15,8 +56,9 @@
     ?>
 
     <form method="post">
-        Name: <input type="text" name="name"><br>
-        E-mail: <input type="text" name="email"><br>
+        First Name: <input type="text" name="first_name"><br>
+        Last Name: <input type="text" name="last_name"><br>
+        Password: <input type="password" name="password"><br>
         <input type="submit">
     </form>
 
